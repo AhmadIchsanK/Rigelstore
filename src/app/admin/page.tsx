@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { loadPrincipal } from "@modules/core/auth/session";
 import { can, isAdmin } from "@modules/core/auth/principal";
@@ -87,6 +88,30 @@ export default async function AdminPage() {
           ditegakkan di server.
         </p>
       </section>
+
+      {can(principal, "products.manage") && (
+        <section
+          style={{ marginTop: 24, padding: 20, border: "1px solid #e5e7eb", borderRadius: 12 }}
+        >
+          <strong>Katalog</strong>
+          <p style={{ color: "var(--muted)", marginTop: 4, marginBottom: 10 }}>
+            Kelola produk, file, dan stok kredensial unik.
+          </p>
+          <Link
+            href="/admin/products"
+            style={{
+              padding: "8px 12px",
+              borderRadius: 8,
+              background: "var(--brand)",
+              color: "#fff",
+              textDecoration: "none",
+              fontWeight: 600,
+            }}
+          >
+            Kelola Produk →
+          </Link>
+        </section>
+      )}
 
       {can(principal, "admins.manage") && (
         <section

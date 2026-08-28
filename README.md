@@ -5,9 +5,10 @@ dengan lapisan **AI** di tahap akhir. Dibangun sebagai **modular monolith**
 (Next.js + TypeScript) — satu core commerce yang dipakai bersama oleh website
 dan Telegram.
 
-> **Status saat ini: Fase 1 — Database + Login + RBAC + fondasi admin.**
-> Sudah ada: login (Supabase Auth), peran pengguna, dan batas akses admin yang
-> dicek di server. Belum ada produk/checkout/pembayaran — itu fase berikutnya.
+> **Status saat ini: Fase 2 — Produk + file + inventory unik.**
+> Sudah ada: login + RBAC (Fase 1), lalu manajemen produk (3 tipe), unggah file,
+> dan stok kredensial unik dengan fondasi anti double-sell (reservasi atomik).
+> Checkout & pembayaran QRIS menyusul di Fase 3.
 
 ---
 
@@ -85,8 +86,8 @@ nilainya di sana. **Jangan** commit `.env.local`. Untuk Fase 1 yang wajib:
 | Fase | Deliverable |
 |------|-------------|
 | 0 | Repo, spec, arsitektur, jalan lokal. ✅ |
-| **1** | **Auth + RBAC + fondasi admin. ← sekarang** |
-| 2 | Produk + file + inventory unik. |
+| 1 | Auth + RBAC + fondasi admin. ✅ |
+| **2** | **Produk + file + inventory unik. ← sekarang** |
 | 3 | Cart + order + QRIS + webhook ⚠️ (zona bahaya). |
 | 4 | Delivery aman + akun + pemulihan order guest. |
 | 5 | UI mobile-first + SEO + polish. |

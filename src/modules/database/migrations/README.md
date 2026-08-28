@@ -17,3 +17,8 @@ menerapkan ke database baru, jalankan berurutan (mis. lewat Supabase CLI
 | 5 | `20260828034813_phase1_rls_policies.sql` | RLS default-deny + policy semua tabel |
 | 6 | `20260828034826_phase1_auth_user_provisioning.sql` | trigger profil pelanggan saat signup |
 | 7 | `20260828034915_phase1_harden_functions.sql` | pengerasan grant & search_path fungsi |
+| 8 | `20260828042047_phase2_catalog.sql` | products, product_files, categories, collections + join |
+| 9 | `20260828042108_phase2_inventory_items.sql` | inventory_items + enum status barang unik |
+| 10 | `20260828042151_phase2_inventory_functions.sql` | reserve/release/sold/delivered/revoke (locking) |
+| 11 | `20260828042221_phase2_rls_policies.sql` | RLS katalog & inventory |
+| 12 | `20260828042300_phase2_storage_bucket.sql` | bucket privat `product-files` |

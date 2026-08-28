@@ -11,7 +11,19 @@ Database: **PostgreSQL** (Supabase). Semua akses lewat modul `database`.
 > aktif (default-deny)**. Ditambah fungsi RBAC deterministik `is_admin()`,
 > `has_permission()`, `current_admin_role()` (SECURITY DEFINER; `super_admin`
 > punya semua izin implisit) dan trigger auto-provisioning profil pelanggan saat
-> signup. Tabel produk/order/pembayaran/AI/social menyusul di fasenya.
+> signup.
+>
+> **Fase 2:** ditambahkan `products`, `product_files`, `categories`,
+> `collections`, `product_categories`, `product_collections`, dan
+> `inventory_items` (dengan enum `inventory_status`). Semua RLS aktif
+> (produk `published` bisa dibaca publik; `inventory_items` hanya
+> `inventory.manage`). Ditambah mesin inventory deterministik:
+> `reserve_inventory_item` (atomik, `FOR UPDATE SKIP LOCKED` — anti double-sell),
+> `release_expired_reservations`, `mark_inventory_sold`,
+> `mark_inventory_delivered`, `revoke_inventory_item`. Kredensial disimpan
+> terenkripsi (AES-256-GCM). Bucket storage privat `product-files`.
+>
+> Tabel order/payment/entitlement/AI/social menyusul di fasenya.
 
 ---
 

@@ -5,6 +5,48 @@ Format tanggal: YYYY-MM-DD.
 
 ---
 
+## Fase 2 — Produk + file + inventory unik — 2026-08-28
+
+Admin bisa membuat produk (3 tipe), mengunggah file, dan mengelola stok
+kredensial unik. Fondasi anti double-sell (reservasi atomik) sudah ada &
+teruji; checkout sungguhan menyusul Fase 3.
+
+### Ditambahkan
+- **Tabel katalog**: `products`, `product_files`, `categories`, `collections`,
+  `product_categories`, `product_collections` (+ enum `product_type`,
+  `product_status`, `product_file_kind`). RLS: produk `published` bisa dibaca
+  publik; file produk tidak publik (pengiriman aman Fase 4).
+- **`inventory_items`** dengan enum status barang unik
+  `AVAILABLE→RESERVED→SOLD→DELIVERED→COMPLETED` (+ `EXPIRED/REVOKED/REFUNDED`).
+  RLS: hanya `inventory.manage`; tidak pernah publik.
+- **Mesin inventory deterministik (SQL)**: `reserve_inventory_item`
+  (atomik, `FOR UPDATE SKIP LOCKED` — dua checkout tidak bisa merebut item yang
+  sama), `release_expired_reservations`, `mark_inventory_sold` (idempoten),
+  `mark_inventory_delivered`, `revoke_inventory_item`. Hanya bisa dipanggil
+  server (service_role) — tidak pernah AI.
+- **Enkripsi kredensial at rest** (AES-256-GCM); kredensial polos tidak pernah
+  disimpan. Admin hanya melihat label tersamar.
+- **State machine inventory (TypeScript)** yang mencerminkan aturan SQL.
+- **Adapter storage** (Supabase Storage) + bucket privat `product-files` +
+  helper signed URL.
+- **UI admin**: daftar produk, buat produk (3 tipe), unggah file, tambah stok
+  kredensial (bulk), ubah status publikasi, cabut item — semua dijaga izin
+  `products.manage` / `inventory.manage` di server. Setiap aksi dicatat di audit.
+
+### Diverifikasi terhadap database langsung
+- Reserve dua kali pada stok 2 item → dua item berbeda; reserve ketiga → NULL
+  (tidak over-sell). Order salah gagal `mark_sold`; order benar sukses; replay
+  idempoten. Reservasi kedaluwarsa dilepas kembali ke `AVAILABLE`. Data uji
+  dibersihkan.
+- Automated test bertambah jadi 32 (enkripsi round-trip + deteksi tampering
+  GCM, state machine inventory, aturan tipe produk).
+
+### Catatan
+- Yang harus diisi pemilik: `CREDENTIAL_ENCRYPTION_KEY` (32 byte) di environment
+  untuk enkripsi kredensial.
+
+---
+
 ## Fase 1 — Database + Login + RBAC + fondasi admin — 2026-08-28
 
 Sistem login, peran pengguna, dan batas akses admin yang **ditegakkan di

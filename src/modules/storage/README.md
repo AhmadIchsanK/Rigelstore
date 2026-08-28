@@ -3,7 +3,9 @@
 Penyimpanan file produk & aset di balik interface adapter (Cloudflare R2 atau
 Supabase Storage). Bertanggung jawab atas **pengiriman aman**.
 
-**Status Fase 0:** kerangka kosong.
+**Status:** Fase 2 aktif. Berisi `supabaseStorage.ts` — upload ke bucket privat
+`product-files` + helper signed URL berumur pendek. Pengiriman aman ke pelanggan
+(cek entitlement) dibangun Fase 4.
 
 ## Isi yang direncanakan (dibangun Fase 2/4)
 
