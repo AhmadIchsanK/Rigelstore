@@ -1,9 +1,17 @@
 # DATABASE.md — RigelStore
 
 Cetak biru tabel database RigelStore, bersumber dari rencana v1.0. Ini **rencana
-konseptual**; skema SQL nyata dibuat pada Fase 1 di dalam `src/modules/database`.
+konseptual**; skema SQL nyata dibangun bertahap per fase.
 
 Database: **PostgreSQL** (Supabase). Semua akses lewat modul `database`.
+
+> **Status implementasi (Fase 1):** sudah dibuat di project Supabase RigelStore:
+> `roles`, `permissions`, `role_permissions`, `users`, `admin_users`,
+> `admin_invitations`, `audit_logs`, `system_settings` — semuanya dengan **RLS
+> aktif (default-deny)**. Ditambah fungsi RBAC deterministik `is_admin()`,
+> `has_permission()`, `current_admin_role()` (SECURITY DEFINER; `super_admin`
+> punya semua izin implisit) dan trigger auto-provisioning profil pelanggan saat
+> signup. Tabel produk/order/pembayaran/AI/social menyusul di fasenya.
 
 ---
 

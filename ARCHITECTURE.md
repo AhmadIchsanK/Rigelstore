@@ -47,7 +47,7 @@ Prinsip yang tidak boleh dilanggar:
 | Framework | **Next.js + TypeScript (App Router)** | Satu basis kode untuk UI + API route. |
 | Bahasa | **TypeScript** | Strict mode. |
 | Database | **PostgreSQL** via **Supabase** (free tier) | Satu database untuk web + Telegram. |
-| Auth | **Auth.js** atau autentikasi terkelola (mis. Supabase Auth) | RBAC ditegakkan di server. |
+| Auth | **Supabase Auth** (dipilih di Fase 1) | Menyatu dengan DB/storage; RBAC dibangun sendiri di tabel `roles`/`permissions` & ditegakkan di server. |
 | Storage | **Cloudflare R2** atau **Supabase Storage** | Signed URL berumur pendek. |
 | Telegram | **Telegram Bot API** | Token dari @BotFather. |
 | Pembayaran | **Gateway QRIS** (mulai Midtrans, mode Sandbox saat tes) | Di balik adapter. |

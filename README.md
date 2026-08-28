@@ -5,9 +5,9 @@ dengan lapisan **AI** di tahap akhir. Dibangun sebagai **modular monolith**
 (Next.js + TypeScript) — satu core commerce yang dipakai bersama oleh website
 dan Telegram.
 
-> **Status saat ini: Fase 0 — Fondasi & Dokumentasi.**
-> Belum ada fitur toko (login, produk, checkout, pembayaran, UI). Fase 0 hanya
-> menyiapkan struktur repo + dokumen spesifikasi.
+> **Status saat ini: Fase 1 — Database + Login + RBAC + fondasi admin.**
+> Sudah ada: login (Supabase Auth), peran pengguna, dan batas akses admin yang
+> dicek di server. Belum ada produk/checkout/pembayaran — itu fase berikutnya.
 
 ---
 
@@ -37,11 +37,25 @@ npm run dev        # buka http://localhost:3000
 ```
 
 Perintah lain: `npm run build`, `npm run start`, `npm run lint`,
-`npm run typecheck`.
+`npm run typecheck`, `npm test` (automated test).
 
 Untuk environment variables, salin `.env.example` → `.env.local` lalu isi
-nilainya di sana (tidak semua dibutuhkan di Fase 0). **Jangan** commit
-`.env.local`.
+nilainya di sana. **Jangan** commit `.env.local`. Untuk Fase 1 yang wajib:
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, dan
+`SUPABASE_SERVICE_ROLE_KEY` (rahasia — dari Supabase → Project Settings → API).
+
+### Membuat Super Admin pertama (sekali saja)
+
+1. Jalankan app, buka `/login`, lalu **Daftar** dengan email kamu.
+2. Pastikan `SUPABASE_SERVICE_ROLE_KEY` terisi di environment.
+3. Jalankan: `node scripts/bootstrap-admin.mjs email-kamu@contoh.com super_admin`
+4. Login, buka `/admin`. Admin berikutnya cukup diundang dari halaman admin.
+
+### Uji batas akses (cara tes Fase 1)
+
+- `npm test` menjalankan tes otomatis batas akses & izin peran.
+- Manual: buat 1 akun admin (langkah di atas) + 1 akun customer (Daftar biasa).
+  Login sebagai customer, paksa buka `/admin` → harus **ditolak (403)**.
 
 ---
 
@@ -70,8 +84,8 @@ nilainya di sana (tidak semua dibutuhkan di Fase 0). **Jangan** commit
 
 | Fase | Deliverable |
 |------|-------------|
-| **0** | **Repo, spec, arsitektur, jalan lokal. ← sekarang** |
-| 1 | Auth + RBAC + fondasi admin. |
+| 0 | Repo, spec, arsitektur, jalan lokal. ✅ |
+| **1** | **Auth + RBAC + fondasi admin. ← sekarang** |
 | 2 | Produk + file + inventory unik. |
 | 3 | Cart + order + QRIS + webhook ⚠️ (zona bahaya). |
 | 4 | Delivery aman + akun + pemulihan order guest. |

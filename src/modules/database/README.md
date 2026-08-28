@@ -2,8 +2,12 @@
 
 Skema, migrasi, dan lapisan akses data (repository) di atas PostgreSQL/Supabase.
 
-**Status Fase 0:** kerangka kosong. Cetak biru tabel ada di `DATABASE.md` di root
-repo; skema nyata dibuat pada Fase 1.
+**Status:** Fase 1 aktif. Berisi klien Supabase (`supabase/`) dan migrasi SQL
+(`migrations/`) untuk skema fondasi RBAC/identitas. Cetak biru lengkap ada di
+`DATABASE.md` di root repo.
+
+- `supabase/` — klien browser, server (RLS per sesi), dan admin (service_role).
+- `migrations/` — SQL migrasi Fase 1 (sumber kebenaran skema di git).
 
 ## Isi yang direncanakan (dibangun Fase 1)
 
