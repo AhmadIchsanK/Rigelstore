@@ -12,7 +12,9 @@ import { processPaymentWebhook } from "@modules/core/orders/service";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
-  if (process.env.NODE_ENV === "production" || getPaymentProvider().name !== "mock") {
+  // Aman diaktifkan HANYA saat provider = mock (tidak ada gateway/uang asli).
+  // Begitu PAYMENT_PROVIDER=midtrans, jalur ini otomatis mati.
+  if (getPaymentProvider().name !== "mock") {
     return NextResponse.json({ error: "disabled" }, { status: 403 });
   }
 

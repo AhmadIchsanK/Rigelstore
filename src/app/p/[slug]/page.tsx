@@ -1,13 +1,36 @@
-import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createSupabaseServerClient } from "@modules/database/supabase/server";
 import { loadPrincipal } from "@modules/core/auth/session";
+import { PRODUCT_TYPE_LABEL, coverColor, rupiah } from "../../_components/format";
 import { BuyBox } from "./BuyBox";
 
 export const dynamic = "force-dynamic";
 
-function rupiah(n: number) {
-  return "Rp" + Number(n).toLocaleString("id-ID");
+async function fetchProduct(slug: string) {
+  const supabase = await createSupabaseServerClient();
+  const { data } = await supabase
+    .from("products")
+    .select("id, title, description, type, price_idr, status")
+    .eq("slug", slug)
+    .eq("status", "published")
+    .maybeSingle();
+  return data;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await fetchProduct(slug);
+  if (!product) return { title: "Produk tidak ditemukan" };
+  return {
+    title: product.title,
+    description: product.description?.slice(0, 150) ?? `Beli ${product.title} di RigelStore.`,
+    openGraph: { title: product.title, type: "website" },
+  };
 }
 
 export default async function ProductPage({
@@ -16,40 +39,47 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const supabase = await createSupabaseServerClient();
-  const { data: product } = await supabase
-    .from("products")
-    .select("id, title, description, type, price_idr, status")
-    .eq("slug", slug)
-    .eq("status", "published")
-    .maybeSingle();
-
+  const product = await fetchProduct(slug);
   if (!product) notFound();
 
   const principal = await loadPrincipal();
   const loggedIn = principal.kind !== "guest";
+  const initial = product.title.trim().charAt(0).toUpperCase() || "R";
 
   return (
-    <main style={{ maxWidth: 680, margin: "0 auto", padding: "40px 24px" }}>
-      <Link href="/catalog" style={{ color: "var(--muted)", textDecoration: "none" }}>
-        ← Katalog
-      </Link>
-      <h1 style={{ color: "var(--brand)", marginBottom: 4 }}>{product.title}</h1>
-      <div style={{ fontSize: 22, fontWeight: 800, margin: "8px 0" }}>
-        {rupiah(product.price_idr)}
+    <main className="container page">
+      <div style={{ display: "grid", gap: 28, gridTemplateColumns: "minmax(0,1fr)", maxWidth: 860 }}>
+        <div
+          className="card"
+          style={{ overflow: "hidden", display: "grid", gridTemplateColumns: "1fr", gap: 0 }}
+        >
+          <div
+            className="cover"
+            style={{ background: coverColor(product.title), aspectRatio: "16 / 6", fontSize: 56 }}
+          >
+            {initial}
+          </div>
+          <div className="card-pad">
+            <span className="badge">{PRODUCT_TYPE_LABEL[product.type] ?? product.type}</span>
+            <h1 style={{ fontSize: 28, margin: "10px 0 6px" }}>{product.title}</h1>
+            <div className="price" style={{ fontSize: 26 }}>
+              {rupiah(product.price_idr)}
+            </div>
+            {product.description && (
+              <p style={{ color: "#374151", whiteSpace: "pre-wrap", marginTop: 12 }}>
+                {product.description}
+              </p>
+            )}
+            <div style={{ marginTop: 20 }}>
+              <BuyBox productId={product.id} loggedIn={loggedIn} />
+            </div>
+            <p className="muted" style={{ fontSize: 13, marginTop: 14 }}>
+              Pembayaran via QRIS. Barang dikirim otomatis setelah pembayaran
+              terkonfirmasi gateway.
+            </p>
+          </div>
+        </div>
       </div>
-      {product.description && (
-        <p style={{ color: "#374151", whiteSpace: "pre-wrap" }}>{product.description}</p>
-      )}
-
-      <div style={{ marginTop: 24 }}>
-        <BuyBox productId={product.id} loggedIn={loggedIn} />
-      </div>
-
-      <p style={{ color: "var(--muted)", fontSize: 13, marginTop: 16 }}>
-        Pembayaran via QRIS. Barang dikirim otomatis setelah pembayaran
-        terkonfirmasi oleh gateway.
-      </p>
     </main>
   );
 }

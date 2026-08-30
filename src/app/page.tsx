@@ -1,79 +1,54 @@
 /**
- * Halaman depan. Fase 1: menampilkan status login sederhana + tautan.
- * Storefront asli dibangun mulai Fase 5.
+ * Beranda. Fase 5: hero + produk terbaru (mobile-first, terlihat seperti toko
+ * normal yang terpercaya — bukan dashboard AI).
  */
 import Link from "next/link";
-import { loadPrincipal } from "@modules/core/auth/session";
-import { isAdmin } from "@modules/core/auth/principal";
-import { signOut } from "./login/actions";
+import { createSupabaseServerClient } from "@modules/database/supabase/server";
+import { ProductCard } from "./_components/ProductCard";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const principal = await loadPrincipal();
+  const supabase = await createSupabaseServerClient();
+  const { data: products } = await supabase
+    .from("products")
+    .select("id, slug, title, type, price_idr")
+    .eq("status", "published")
+    .order("created_at", { ascending: false })
+    .limit(8);
 
   return (
-    <main style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px" }}>
-      <h1 style={{ color: "var(--brand)", marginBottom: 8 }}>RigelStore</h1>
-      <p style={{ color: "var(--muted)", marginTop: 0 }}>
-        Toko produk digital — website + Telegram, pembayaran QRIS otomatis.
-      </p>
-
-      <div style={{ marginTop: 16 }}>
-        <Link
-          href="/catalog"
-          style={{
-            padding: "8px 12px",
-            borderRadius: 8,
-            background: "var(--brand)",
-            color: "#fff",
-            textDecoration: "none",
-            fontWeight: 600,
-          }}
-        >
-          Lihat katalog →
-        </Link>
-      </div>
-
-      <div style={{ display: "flex", gap: 12, alignItems: "center", marginTop: 16 }}>
-        {principal.kind === "guest" ? (
-          <>
-            <Link href="/login">Masuk / Daftar</Link>
-            <Link href="/orders/lookup">Lacak order (tamu)</Link>
-          </>
-        ) : (
-          <>
-            <span style={{ color: "var(--muted)" }}>
-              Halo, {principal.email}
-              {isAdmin(principal) ? ` (admin: ${principal.role})` : ""}
-            </span>
-            <Link href="/account">Akun saya</Link>
-            {isAdmin(principal) && <Link href="/admin">Panel Admin</Link>}
-            <form action={signOut}>
-              <button
-                style={{
-                  padding: "6px 10px",
-                  borderRadius: 8,
-                  border: "1px solid #d1d5db",
-                  cursor: "pointer",
-                }}
-              >
-                Keluar
-              </button>
-            </form>
-          </>
-        )}
-      </div>
-
-      <section
-        style={{ marginTop: 32, padding: 20, border: "1px solid #e5e7eb", borderRadius: 12 }}
-      >
-        <strong>Status: Fase 3 — Keranjang + Order + QRIS + Webhook</strong>
-        <p style={{ marginBottom: 0 }}>
-          Pembeli bisa checkout dan membayar via QRIS; status lunas hanya dari
-          webhook gateway yang terverifikasi. Pengiriman aman & akun pelanggan
-          menyusul di Fase 4.
+    <main className="container page">
+      <section className="hero">
+        <h1>Produk digital, langsung cair setelah bayar.</h1>
+        <p>
+          File, kredensial, dan PDF terproteksi. Bayar via QRIS, barang dikirim
+          otomatis dan aman.
         </p>
+        <div className="cta-row">
+          <Link href="/catalog" className="btn btn-primary">
+            Lihat katalog
+          </Link>
+          <Link href="/orders/lookup" className="btn">
+            Lacak order
+          </Link>
+        </div>
+      </section>
+
+      <section style={{ marginTop: 36 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+          <h2 style={{ fontSize: 20 }}>Produk terbaru</h2>
+          <Link href="/catalog">Semua produk →</Link>
+        </div>
+        {!products || products.length === 0 ? (
+          <div className="empty">Belum ada produk. Cek lagi nanti ya.</div>
+        ) : (
+          <div className="grid" style={{ marginTop: 12 }}>
+            {products.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        )}
       </section>
     </main>
   );

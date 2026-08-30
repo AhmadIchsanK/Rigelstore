@@ -1,17 +1,12 @@
-import Link from "next/link";
 import { createSupabaseServerClient } from "@modules/database/supabase/server";
+import { ProductCard } from "../_components/ProductCard";
 
-export const metadata = { title: "Katalog — RigelStore" };
+export const metadata = {
+  title: "Katalog",
+  description: "Semua produk digital RigelStore — file, kredensial, dan PDF terproteksi.",
+};
 export const dynamic = "force-dynamic";
 
-function rupiah(n: number) {
-  return "Rp" + Number(n).toLocaleString("id-ID");
-}
-
-/**
- * Katalog publik sederhana (Fase 3). Tampilan penuh (mobile-first) dibangun
- * Fase 5. Hanya produk 'published' yang tampil (ditegakkan RLS).
- */
 export default async function CatalogPage() {
   const supabase = await createSupabaseServerClient();
   const { data: products } = await supabase
@@ -21,38 +16,20 @@ export default async function CatalogPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <main style={{ maxWidth: 820, margin: "0 auto", padding: "40px 24px" }}>
-      <Link href="/" style={{ color: "var(--muted)", textDecoration: "none" }}>
-        ← Beranda
-      </Link>
-      <h1 style={{ color: "var(--brand)" }}>Katalog</h1>
+    <main className="container page">
+      <h1 style={{ fontSize: 28, marginBottom: 4 }}>Katalog</h1>
+      <p className="muted" style={{ marginTop: 0 }}>
+        {products?.length ? `${products.length} produk tersedia` : "Jelajahi produk digital kami"}
+      </p>
 
       {!products || products.length === 0 ? (
-        <p style={{ color: "var(--muted)" }}>Belum ada produk yang tersedia.</p>
+        <div className="empty">Belum ada produk yang tersedia.</div>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: 12 }}>
+        <div className="grid" style={{ marginTop: 16 }}>
           {products.map((p) => (
-            <li
-              key={p.id}
-              style={{
-                border: "1px solid #e5e7eb",
-                borderRadius: 12,
-                padding: 16,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <div>
-                <Link href={`/p/${p.slug}`} style={{ fontWeight: 600 }}>
-                  {p.title}
-                </Link>
-                <div style={{ color: "var(--muted)", fontSize: 14 }}>{p.type}</div>
-              </div>
-              <div style={{ fontWeight: 700 }}>{rupiah(p.price_idr)}</div>
-            </li>
+            <ProductCard key={p.id} product={p} />
           ))}
-        </ul>
+        </div>
       )}
     </main>
   );

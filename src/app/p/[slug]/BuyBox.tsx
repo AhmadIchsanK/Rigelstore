@@ -15,38 +15,16 @@ export function BuyBox({
   const [state, action, pending] = useActionState(buyNowAction, initial);
 
   return (
-    <form action={action} style={{ display: "grid", gap: 10, maxWidth: 360 }}>
+    <form action={action} style={{ display: "grid", gap: 12, maxWidth: 360 }}>
       <input type="hidden" name="product_id" value={productId} />
       {!loggedIn && (
         <label>
           Email (untuk invoice & barang)
-          <input
-            type="email"
-            name="email"
-            required
-            style={{
-              width: "100%",
-              padding: "10px 12px",
-              border: "1px solid #d1d5db",
-              borderRadius: 8,
-              marginTop: 4,
-            }}
-          />
+          <input className="input" type="email" name="email" required />
         </label>
       )}
-      {state.error && <p style={{ color: "#b91c1c", margin: 0 }}>{state.error}</p>}
-      <button
-        style={{
-          padding: "12px 16px",
-          borderRadius: 8,
-          border: "none",
-          background: "var(--brand)",
-          color: "#fff",
-          fontWeight: 700,
-          cursor: "pointer",
-        }}
-        disabled={pending}
-      >
+      {state.error && <p className="notice-error" style={{ margin: 0 }}>{state.error}</p>}
+      <button className="btn btn-primary btn-block" disabled={pending}>
         {pending ? "Memproses…" : "Beli sekarang (QRIS)"}
       </button>
     </form>

@@ -5,10 +5,9 @@ dengan lapisan **AI** di tahap akhir. Dibangun sebagai **modular monolith**
 (Next.js + TypeScript) — satu core commerce yang dipakai bersama oleh website
 dan Telegram.
 
-> **Status saat ini: Fase 4 — Pengiriman aman + akun + pemulihan order tamu.**
-> Sudah ada: Fase 1–3, lalu pengiriman aman (signed URL berumur pendek, reveal
-> kredensial setelah verifikasi, password unik PDF), dashboard pelanggan, dan
-> pemulihan order tamu. Tampilan toko rapi (mobile-first) menyusul di Fase 5.
+> **Status saat ini: Fase 5 — Tampilan (mobile-first) + SEO + polish.**
+> Toko lengkap: jelajah → beli → bayar QRIS → terima barang aman → ambil ulang,
+> dengan tampilan rapi + SEO. Telegram storefront menyusul di Fase 6.
 
 ---
 
@@ -102,8 +101,8 @@ Tanpa Midtrans pun bisa dites lokal (env dev memakai `PAYMENT_PROVIDER=mock`):
 | 1 | Auth + RBAC + fondasi admin. ✅ |
 | 2 | Produk + file + inventory unik. ✅ |
 | 3 | Cart + order + QRIS + webhook ⚠️ (zona bahaya). ✅ |
-| **4** | **Delivery aman + akun + pemulihan order guest. ← sekarang** |
-| 5 | UI mobile-first + SEO + polish. |
+| 4 | Delivery aman + akun + pemulihan order guest. ✅ |
+| **5** | **UI mobile-first + SEO + polish. ← sekarang** |
 | 6 | Telegram storefront. |
 | 7 | Analitik + promo + support. |
 | 8 | Security + tes + backup + hardening ⚠️. |

@@ -5,6 +5,32 @@ Format tanggal: YYYY-MM-DD.
 
 ---
 
+## Fase 5 — Tampilan (mobile-first) + SEO + polish — 2026-08-30
+
+Toko kini terlihat seperti toko normal yang terpercaya (bukan dashboard AI):
+mobile-first, satu warna brand, latar netral, tipografi jelas.
+
+### Ditambahkan
+- **Design system** (`globals.css`): variabel brand/warna, tombol, kartu, input,
+  grid produk, skeleton, empty state — konsisten & responsif.
+- **Header & footer** global (navigasi menyesuaikan status login/peran).
+- **Restyle** beranda (hero + produk terbaru), katalog (grid kartu + cover
+  warna deterministik), halaman produk, login. Empty state & pesan error/sukses.
+- **SEO**: metadata dasar + Open Graph, `generateMetadata` per produk,
+  `sitemap.xml` (produk published), `robots.txt` (area privat di-disallow).
+- **Skeleton loading** untuk katalog & halaman produk; `not-found` & `error`
+  boundary yang ramah.
+- Alat "Simulasi bayar (mock)" kini aktif juga saat online **selama provider =
+  mock** (otomatis mati saat pindah ke Midtrans) — agar deployment tes bisa
+  dicoba tanpa gateway asli.
+
+### Catatan
+- Cover produk memakai placeholder warna (bukan gambar) untuk menghindari kesan
+  generic AI; gambar cover asli bisa ditambah di fase lanjutan.
+- Automated test tetap 42 (perubahan Fase 5 murni tampilan/SEO). Build bersih.
+
+---
+
 ## Fase 4 — Pengiriman aman + akun pelanggan + pemulihan order tamu — 2026-08-30
 
 Barang terkirim aman setelah lunas; pelanggan bisa ambil ulang; tamu bisa
