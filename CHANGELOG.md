@@ -5,6 +5,52 @@ Format tanggal: YYYY-MM-DD.
 
 ---
 
+## Fase 3 — Keranjang + Order + QRIS + Webhook ⚠️ (zona bahaya) — 2026-08-30
+
+Pembeli bisa checkout dan membayar via QRIS; status lunas HANYA dari webhook
+gateway yang terverifikasi & idempotent. Pengiriman aman + akun pelanggan +
+pemulihan order guest menyusul Fase 4.
+
+### Ditambahkan
+- **Tabel uang**: `orders`, `order_items`, `payments`, `entitlements`,
+  `webhook_events` (idempotency). FK reservasi inventory → orders.
+- **Mesin order deterministik (SQL)**:
+  - `place_order` — buat order + reservasi stok unik ATOMIK; stok habis →
+    exception → rollback (tidak ada reservasi setengah jadi).
+  - `confirm_order_paid` — IDEMPOTEN via `webhook_events(provider,event_id)`;
+    verifikasi signature; cek nominal; tandai LUNAS → item SOLD → entitlement.
+    Status lunas HANYA dari sini.
+  - `expire_due_orders` — kadaluwarsakan order lewat waktu & lepas stok;
+    dijadwalkan **pg_cron tiap menit**.
+- **Adapter pembayaran** di balik interface: **Midtrans QRIS**
+  (Sandbox/produksi) dengan verifikasi signature `sha512(order_id+status_code+
+  gross_amount+ServerKey)`, plus **mock** untuk dev/tes.
+- **Endpoint webhook** `/api/webhooks/midtrans` (terverifikasi + idempotent),
+  **status polling** `/api/orders/[orderNumber]/status`, **cron**
+  `/api/cron/release-expired` (dilindungi CRON_SECRET), dan **alat dev**
+  `/api/dev/simulate-pay` (hanya mock, non-produksi).
+- **UI**: katalog publik, halaman produk + "Beli sekarang" (guest pakai email),
+  halaman checkout (QR + hitung mundur + status yang hanya berubah dari webhook).
+  RLS: hanya produk `published` yang tampil.
+
+### Diverifikasi terhadap database langsung (uji ketat)
+- Stok 1 item: order A dapat; order B → OUT_OF_STOCK + rollback (0 orphan).
+- Bayar A → LUNAS, item SOLD, 1 entitlement. **Replay webhook sama → duplicate,
+  tetap 1 entitlement** (tidak dobel kirim). Signature salah → ditolak. Nominal
+  salah → tidak diproses.
+- Order kadaluwarsa → stok kembali AVAILABLE, order expired. Data uji dibersihkan.
+- Automated test naik jadi **40** (signature Midtrans + pemetaan status,
+  verifikasi webhook mock).
+
+### Catatan
+- Yang harus diisi pemilik untuk tes LIVE sandbox: `MIDTRANS_SERVER_KEY` &
+  `MIDTRANS_CLIENT_KEY` (dari dashboard Midtrans Sandbox), lalu
+  `PAYMENT_PROVIDER=midtrans`. Tanpa itu, dev memakai adapter `mock`
+  (+ tombol "Simulasi bayar").
+- Webhook URL yang didaftarkan di Midtrans: `<domain>/api/webhooks/midtrans`.
+
+---
+
 ## Fase 2 — Produk + file + inventory unik — 2026-08-28
 
 Admin bisa membuat produk (3 tipe), mengunggah file, dan mengelola stok

@@ -22,3 +22,7 @@ menerapkan ke database baru, jalankan berurutan (mis. lewat Supabase CLI
 | 10 | `20260828042151_phase2_inventory_functions.sql` | reserve/release/sold/delivered/revoke (locking) |
 | 11 | `20260828042221_phase2_rls_policies.sql` | RLS katalog & inventory |
 | 12 | `20260828042300_phase2_storage_bucket.sql` | bucket privat `product-files` |
+| 13 | `20260830130901_phase3_orders.sql` | orders, order_items, payments, entitlements, webhook_events |
+| 14 | `20260830130958_phase3_order_functions.sql` | place_order, confirm_order_paid (idempoten), expire_due_orders |
+| 15 | `20260830131019_phase3_rls_policies.sql` | RLS order/pembayaran (baca milik sendiri) |
+| 16 | `20260830131937_phase3_schedule_expiry_sweep.sql` | pg_cron pelepasan stok kadaluwarsa /menit |

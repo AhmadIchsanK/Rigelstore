@@ -3,7 +3,10 @@
 Lapisan pembayaran di balik sebuah **interface adapter** agar gateway QRIS bisa
 diganti tanpa mengubah `core/`. Mulai dari Midtrans (mode Sandbox saat tes).
 
-**Status Fase 0:** kerangka kosong.
+**Status:** Fase 3 aktif. Berisi `provider.ts` (interface), `midtrans.ts`
+(adapter QRIS + verifikasi signature sha512), `mock.ts` (untuk dev/tes), dan
+`index.ts` (pemilih adapter via env). Webhook diproses lewat
+`core/orders/service.ts` → fungsi SQL `confirm_order_paid` (idempoten).
 
 ## Isi yang direncanakan (dibangun Fase 3 — ZONA BAHAYA, reasoning tinggi)
 

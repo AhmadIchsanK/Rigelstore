@@ -23,7 +23,14 @@ Database: **PostgreSQL** (Supabase). Semua akses lewat modul `database`.
 > `mark_inventory_delivered`, `revoke_inventory_item`. Kredensial disimpan
 > terenkripsi (AES-256-GCM). Bucket storage privat `product-files`.
 >
-> Tabel order/payment/entitlement/AI/social menyusul di fasenya.
+> **Fase 3:** ditambahkan `orders`, `order_items`, `payments`, `entitlements`,
+> `webhook_events` (idempotency). Mesin order deterministik: `place_order`
+> (reservasi atomik + buat order), `confirm_order_paid` (idempoten: LUNAS →
+> SOLD → entitlement; hanya dari webhook terverifikasi), `expire_due_orders`
+> (pelepasan stok kadaluwarsa, dijadwalkan pg_cron tiap menit). RLS: pelanggan
+> hanya membaca order/entitlement miliknya.
+>
+> Tabel AI/social menyusul di fasenya.
 
 ---
 

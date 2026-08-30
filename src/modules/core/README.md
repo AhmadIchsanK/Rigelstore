@@ -3,10 +3,11 @@
 Jantung RigelStore. Semua **aturan bisnis deterministik** tinggal di sini dan
 dipakai bersama oleh website (`src/app` + `web/`) maupun Telegram (`bot/`).
 
-**Status:** berisi logika Fase 1–2: `auth/` & `rbac/` (gerbang akses
+**Status:** berisi logika Fase 1–3: `auth/` & `rbac/` (gerbang akses
 deterministik), `admin/` (undangan), `audit/` (audit log), `crypto/` (enkripsi
 kredensial), `inventory/` (state machine barang unik), `products/` (aturan tipe
-& service produk/inventory). Order/payment/entitlement menyusul di fasenya.
+& service produk/inventory), `orders/` (orkestrasi order + webhook, di atas
+fungsi SQL deterministik). AI/social menyusul di fasenya.
 
 ## Isi yang direncanakan (dibangun Fase 1–4)
 

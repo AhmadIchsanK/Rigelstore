@@ -19,6 +19,22 @@ export default async function Home() {
         Toko produk digital — website + Telegram, pembayaran QRIS otomatis.
       </p>
 
+      <div style={{ marginTop: 16 }}>
+        <Link
+          href="/catalog"
+          style={{
+            padding: "8px 12px",
+            borderRadius: 8,
+            background: "var(--brand)",
+            color: "#fff",
+            textDecoration: "none",
+            fontWeight: 600,
+          }}
+        >
+          Lihat katalog →
+        </Link>
+      </div>
+
       <div style={{ display: "flex", gap: 12, alignItems: "center", marginTop: 16 }}>
         {principal.kind === "guest" ? (
           <Link href="/login">Masuk / Daftar</Link>
@@ -48,10 +64,11 @@ export default async function Home() {
       <section
         style={{ marginTop: 32, padding: 20, border: "1px solid #e5e7eb", borderRadius: 12 }}
       >
-        <strong>Status: Fase 1 — Auth + RBAC + fondasi admin</strong>
+        <strong>Status: Fase 3 — Keranjang + Order + QRIS + Webhook</strong>
         <p style={{ marginBottom: 0 }}>
-          Login, peran pengguna, dan batas akses admin (dicek di server) sudah
-          aktif. Produk, checkout, dan pembayaran menyusul di fase berikutnya.
+          Pembeli bisa checkout dan membayar via QRIS; status lunas hanya dari
+          webhook gateway yang terverifikasi. Pengiriman aman & akun pelanggan
+          menyusul di Fase 4.
         </p>
       </section>
     </main>

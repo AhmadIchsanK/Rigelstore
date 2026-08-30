@@ -5,10 +5,10 @@ dengan lapisan **AI** di tahap akhir. Dibangun sebagai **modular monolith**
 (Next.js + TypeScript) — satu core commerce yang dipakai bersama oleh website
 dan Telegram.
 
-> **Status saat ini: Fase 2 — Produk + file + inventory unik.**
-> Sudah ada: login + RBAC (Fase 1), lalu manajemen produk (3 tipe), unggah file,
-> dan stok kredensial unik dengan fondasi anti double-sell (reservasi atomik).
-> Checkout & pembayaran QRIS menyusul di Fase 3.
+> **Status saat ini: Fase 3 — Keranjang + Order + QRIS + Webhook.**
+> Sudah ada: Fase 1–2, lalu checkout + pembayaran QRIS. Status lunas hanya dari
+> webhook gateway yang terverifikasi & idempotent (tidak pernah percaya tombol
+> "sudah bayar"). Pengiriman aman + akun pelanggan menyusul di Fase 4.
 
 ---
 
@@ -58,6 +58,19 @@ nilainya di sana. **Jangan** commit `.env.local`. Untuk Fase 1 yang wajib:
 - Manual: buat 1 akun admin (langkah di atas) + 1 akun customer (Daftar biasa).
   Login sebagai customer, paksa buka `/admin` → harus **ditolak (403)**.
 
+### Menguji alur pembayaran (Fase 3, pakai mock)
+
+Tanpa Midtrans pun bisa dites lokal (env dev memakai `PAYMENT_PROVIDER=mock`):
+
+1. Buat produk **published** di `/admin/products` (mis. tipe kredensial unik +
+   tambah stok, atau tipe file reusable).
+2. Buka `/catalog` → pilih produk → **Beli sekarang** (isi email bila tamu).
+3. Di halaman checkout, klik **🧪 Simulasi bayar (dev)** → status jadi **lunas**,
+   stok unik jadi `SOLD`, entitlement dibuat.
+4. Untuk Midtrans **Sandbox** sungguhan: isi `MIDTRANS_SERVER_KEY` &
+   `MIDTRANS_CLIENT_KEY`, set `PAYMENT_PROVIDER=midtrans`, dan daftarkan URL
+   webhook `<domain>/api/webhooks/midtrans` di dashboard Midtrans.
+
 ---
 
 ## Aturan kerja proyek (dipegang di SELURUH proyek)
@@ -87,8 +100,8 @@ nilainya di sana. **Jangan** commit `.env.local`. Untuk Fase 1 yang wajib:
 |------|-------------|
 | 0 | Repo, spec, arsitektur, jalan lokal. ✅ |
 | 1 | Auth + RBAC + fondasi admin. ✅ |
-| **2** | **Produk + file + inventory unik. ← sekarang** |
-| 3 | Cart + order + QRIS + webhook ⚠️ (zona bahaya). |
+| 2 | Produk + file + inventory unik. ✅ |
+| **3** | **Cart + order + QRIS + webhook ⚠️ (zona bahaya). ← sekarang** |
 | 4 | Delivery aman + akun + pemulihan order guest. |
 | 5 | UI mobile-first + SEO + polish. |
 | 6 | Telegram storefront. |
