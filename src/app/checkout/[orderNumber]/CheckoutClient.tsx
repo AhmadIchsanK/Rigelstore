@@ -76,7 +76,12 @@ export function CheckoutClient({
     return (
       <div style={{ padding: 20, border: "1px solid #bbf7d0", background: "#f0fdf4", borderRadius: 12 }}>
         <h2 style={{ color: "#15803d", marginTop: 0 }}>Pembayaran berhasil ✓</h2>
-        <p>Order {orderNumber} lunas. Barang & akses akan tersedia (pengiriman aman: Fase 4).</p>
+        <p>
+          Order {orderNumber} lunas. Ambil barangmu di{" "}
+          <a href="/account">Akun saya</a> (jika login) atau lewat{" "}
+          <a href="/orders/lookup">Lacak order</a> (tamu: pakai nomor order +
+          email).
+        </p>
       </div>
     );
   }

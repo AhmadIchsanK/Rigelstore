@@ -30,6 +30,11 @@ Database: **PostgreSQL** (Supabase). Semua akses lewat modul `database`.
 > (pelepasan stok kadaluwarsa, dijadwalkan pg_cron tiap menit). RLS: pelanggan
 > hanya membaca order/entitlement miliknya.
 >
+> **Fase 4:** ditambahkan `download_events` (riwayat unduh/reveal) dan kolom
+> pengiriman pada `entitlements` (`password_encrypted`, `delivered_at`,
+> `download_count`). Pengiriman aman: signed URL berumur pendek + reveal
+> kredensial setelah verifikasi kepemilikan.
+>
 > Tabel AI/social menyusul di fasenya.
 
 ---

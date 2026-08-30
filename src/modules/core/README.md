@@ -7,7 +7,8 @@ dipakai bersama oleh website (`src/app` + `web/`) maupun Telegram (`bot/`).
 deterministik), `admin/` (undangan), `audit/` (audit log), `crypto/` (enkripsi
 kredensial), `inventory/` (state machine barang unik), `products/` (aturan tipe
 & service produk/inventory), `orders/` (orkestrasi order + webhook, di atas
-fungsi SQL deterministik). AI/social menyusul di fasenya.
+fungsi SQL deterministik), `delivery/` (pengiriman aman: signed URL, reveal
+kredensial, password PDF). AI/social menyusul di fasenya.
 
 ## Isi yang direncanakan (dibangun Fase 1–4)
 

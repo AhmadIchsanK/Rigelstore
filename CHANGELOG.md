@@ -5,6 +5,39 @@ Format tanggal: YYYY-MM-DD.
 
 ---
 
+## Fase 4 — Pengiriman aman + akun pelanggan + pemulihan order tamu — 2026-08-30
+
+Barang terkirim aman setelah lunas; pelanggan bisa ambil ulang; tamu bisa
+menemukan ordernya kembali. UI toko yang rapi (mobile-first) menyusul Fase 5.
+
+### Ditambahkan
+- **Tabel/kolom**: `download_events` (riwayat unduh/reveal), dan pada
+  `entitlements`: `password_encrypted` (password unik PDF), `delivered_at`,
+  `download_count`.
+- **Mesin pengiriman** (`core/delivery`):
+  - Verifikasi kepemilikan di server — akun cocok (`user_id`) ATAU tamu cocok
+    (nomor order + email). Order wajib `paid`, entitlement `active`.
+  - **Kredensial unik**: didekripsi & ditampilkan HANYA setelah verifikasi;
+    item ditandai `DELIVERED`.
+  - **File reusable**: **signed URL berumur pendek** (default 5 menit); path
+    asli tak pernah diekspos.
+  - **PDF terproteksi**: **password unik mudah diingat** per pembelian
+    (mis. `Biru-Gajah-4821`), dibuat sekali & disimpan terenkripsi, + signed URL
+    base PDF. (Jujur: password ≠ DRM.)
+  - Setiap pengiriman dicatat di `download_events` + `delivered_at`/`download_count`.
+- **Dashboard pelanggan** `/account` — daftar barang + tombol ambil/ambil-ulang.
+- **Pemulihan order tamu** `/orders/lookup` — cari via nomor + email; tiap
+  pengambilan diverifikasi ULANG (tanpa sesi).
+- Tautan navigasi + halaman sukses checkout mengarah ke pengambilan barang.
+
+### Catatan
+- "Link lama mati": signed URL memang berumur pendek; tiap permintaan membuat
+  URL baru. Cukup untuk toko normal (bukan DRM).
+- Automated test naik jadi **42** (format password mudah diingat + variasi).
+- Enkripsi password PDF memakai `CREDENTIAL_ENCRYPTION_KEY` yang sama.
+
+---
+
 ## Fase 3 — Keranjang + Order + QRIS + Webhook ⚠️ (zona bahaya) — 2026-08-30
 
 Pembeli bisa checkout dan membayar via QRIS; status lunas HANYA dari webhook

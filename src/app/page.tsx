@@ -37,13 +37,17 @@ export default async function Home() {
 
       <div style={{ display: "flex", gap: 12, alignItems: "center", marginTop: 16 }}>
         {principal.kind === "guest" ? (
-          <Link href="/login">Masuk / Daftar</Link>
+          <>
+            <Link href="/login">Masuk / Daftar</Link>
+            <Link href="/orders/lookup">Lacak order (tamu)</Link>
+          </>
         ) : (
           <>
             <span style={{ color: "var(--muted)" }}>
               Halo, {principal.email}
               {isAdmin(principal) ? ` (admin: ${principal.role})` : ""}
             </span>
+            <Link href="/account">Akun saya</Link>
             {isAdmin(principal) && <Link href="/admin">Panel Admin</Link>}
             <form action={signOut}>
               <button
