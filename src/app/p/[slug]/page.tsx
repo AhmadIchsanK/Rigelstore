@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createSupabaseServerClient } from "@modules/database/supabase/server";
 import { loadPrincipal } from "@modules/core/auth/session";
-import { PRODUCT_TYPE_LABEL, coverColor, rupiah } from "../../_components/format";
+import { PRODUCT_TYPE_LABEL, coverColor, rupiah, typeChipClass } from "../../_components/format";
 import { BuyBox } from "./BuyBox";
 
 export const dynamic = "force-dynamic";
@@ -55,12 +55,14 @@ export default async function ProductPage({
         >
           <div
             className="cover"
-            style={{ background: coverColor(product.title), aspectRatio: "16 / 6", fontSize: 56 }}
+            style={{ background: coverColor(product.title), aspectRatio: "16 / 6", fontSize: 56, margin: 0, borderRadius: 0 }}
           >
             {initial}
           </div>
           <div className="card-pad">
-            <span className="badge">{PRODUCT_TYPE_LABEL[product.type] ?? product.type}</span>
+            <span className={typeChipClass(product.type)}>
+              {PRODUCT_TYPE_LABEL[product.type] ?? product.type}
+            </span>
             <h1 style={{ fontSize: 28, margin: "10px 0 6px" }}>{product.title}</h1>
             <div className="price" style={{ fontSize: 26 }}>
               {rupiah(product.price_idr)}
