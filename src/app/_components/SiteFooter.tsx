@@ -21,6 +21,7 @@ export function SiteFooter() {
             <div className="footer-links">
               <Link href="/catalog">Katalog</Link>
               <Link href="/orders/lookup">Lacak order</Link>
+              <Link href="/support">Bantuan</Link>
               <Link href="/login">Masuk / Daftar</Link>
             </div>
           </div>

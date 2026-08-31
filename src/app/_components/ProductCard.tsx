@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PRODUCT_TYPE_LABEL, coverColor, rupiah, typeChipClass } from "./format";
+import { PRODUCT_TYPE_LABEL, coverColor, coverUrl, rupiah, typeChipClass } from "./format";
 import { Icon } from "./Icon";
 
 type P = {
@@ -9,16 +9,28 @@ type P = {
   type: string;
   price_idr: number | string;
   description?: string | null;
+  cover_path?: string | null;
 };
 
 /** Kartu produk vertikal (grid katalog). */
 export function ProductCard({ product }: { product: P }) {
   const initial = product.title.trim().charAt(0).toUpperCase() || "R";
+  const cover = coverUrl(product.cover_path);
   return (
     <Link href={`/p/${product.slug}`} className="card product-card">
-      <div className="cover" style={{ background: coverColor(product.title) }}>
-        {initial}
-      </div>
+      {cover ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={cover}
+          alt={product.title}
+          className="cover"
+          style={{ objectFit: "cover", padding: 0 }}
+        />
+      ) : (
+        <div className="cover" style={{ background: coverColor(product.title) }}>
+          {initial}
+        </div>
+      )}
       <div className="body">
         <span className={typeChipClass(product.type)}>
           {PRODUCT_TYPE_LABEL[product.type] ?? product.type}
@@ -33,15 +45,16 @@ export function ProductCard({ product }: { product: P }) {
 /** Kartu produk horizontal (list "Latest Arrivals" / katalog list). */
 export function ProductListCard({ product }: { product: P }) {
   const initial = product.title.trim().charAt(0).toUpperCase() || "R";
+  const cover = coverUrl(product.cover_path);
   return (
     <div className="card list-card">
-      <Link
-        href={`/p/${product.slug}`}
-        className="list-cover"
-        style={{ background: coverColor(product.title) }}
-        aria-label={product.title}
-      >
-        {initial}
+      <Link href={`/p/${product.slug}`} className="list-cover" aria-label={product.title} style={cover ? { padding: 0, overflow: "hidden" } : { background: coverColor(product.title) }}>
+        {cover ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={cover} alt={product.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        ) : (
+          initial
+        )}
       </Link>
       <div className="list-body">
         <span className={typeChipClass(product.type)} style={{ alignSelf: "flex-start" }}>

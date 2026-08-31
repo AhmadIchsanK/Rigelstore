@@ -23,6 +23,10 @@ export function BuyBox({
           <input className="input" type="email" name="email" required />
         </label>
       )}
+      <label>
+        Kode kupon (opsional)
+        <input className="input" name="coupon" placeholder="mis. HEMAT10" />
+      </label>
       {state.error && <p className="notice-error" style={{ margin: 0 }}>{state.error}</p>}
       <button className="btn btn-primary btn-block" disabled={pending}>
         {pending ? "Memproses…" : "Beli sekarang (QRIS)"}

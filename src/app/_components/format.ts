@@ -17,6 +17,14 @@ export function coverColor(seed: string): string {
   return `linear-gradient(135deg, hsl(${h} 62% 62%), hsl(${h2} 60% 52%))`;
 }
 
+/** URL publik gambar cover dari path storage (bucket publik product-covers). */
+export function coverUrl(path?: string | null): string | null {
+  if (!path) return null;
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!base) return null;
+  return `${base}/storage/v1/object/public/product-covers/${path}`;
+}
+
 /** Chip kelas berdasarkan tipe produk (warna tinted). */
 export function typeChipClass(type: string): string {
   if (type === "protected_pdf") return "chip chip-cream";

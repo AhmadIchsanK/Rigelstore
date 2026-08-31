@@ -5,6 +5,35 @@ Format tanggal: YYYY-MM-DD.
 
 ---
 
+## Fase 7 — Analitik + Promo (kupon) + Support + cover produk — 2026-08-31
+
+### Ditambahkan
+- **Cover produk publik**: bucket `product-covers` (publik), unggah cover di
+  admin, tampil di beranda/katalog/halaman produk (fallback gradient bila kosong).
+- **Kupon (promo)**: tabel `coupons` + `compute_coupon_discount` (deterministik,
+  percent/fixed, min-subtotal, batas pemakaian, kedaluwarsa). Terintegrasi ke
+  `place_order` (diskon dihitung server, kupon invalid diabaikan) dan
+  `confirm_order_paid` (pemakaian dihitung saat LUNAS). Input kupon di halaman
+  produk; rincian diskon di checkout. Admin kelola kupon di `/admin/coupons`.
+- **Analitik** (`/admin/analytics`): omzet total, order lunas/pending, AOV,
+  omzet 7 hari, kanal web vs Telegram, produk terlaris — via `sales_overview()`.
+- **Support tickets**: `support_tickets` + `support_messages` (RLS: pelanggan
+  lihat miliknya, admin `support.manage` kelola semua). Pelanggan buat/balas di
+  `/support`; admin balas & ubah status di `/admin/support`.
+- **Akun super admin** dibuat untuk pemilik.
+
+### Diverifikasi terhadap database langsung
+- Kupon 10% pada produk Rp100.000 → total Rp90.000; setelah lunas
+  `redeemed_count` naik jadi 1. Data uji dibersihkan.
+- Advisor keamanan: hanya peringatan RLS-helper yang disengaja + satu setelan
+  Auth (leaked-password protection) yang diatur di dashboard.
+
+### Catatan
+- Password super admin sangat lemah (dibuat sesuai permintaan) — segera ganti &
+  aktifkan 2FA. Disarankan aktifkan "Leaked password protection" di Supabase Auth.
+
+---
+
 ## Fase 6 — Telegram storefront — 2026-08-31
 
 Toko versi Telegram yang memakai **backend & database yang sama** dengan

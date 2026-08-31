@@ -19,9 +19,12 @@ export default async function AccountPage() {
     <main className="container page" style={{ maxWidth: 820 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1 style={{ margin: 0 }}>Akun saya</h1>
-        <form action={signOut}>
-          <button className="btn">Keluar</button>
-        </form>
+        <div style={{ display: "flex", gap: 10 }}>
+          <Link href="/support" className="btn">Bantuan</Link>
+          <form action={signOut}>
+            <button className="btn">Keluar</button>
+          </form>
+        </div>
       </div>
       <p style={{ color: "var(--muted)" }}>{principal.email}</p>
 

@@ -8,6 +8,8 @@ import { can } from "@modules/core/auth/principal";
 import { setStatusAction, revokeItemAction } from "../actions";
 import { FileUploadForm } from "./FileUploadForm";
 import { CredentialsForm } from "./CredentialsForm";
+import { CoverForm } from "./CoverForm";
+import { coverUrl } from "../../../_components/format";
 
 export const metadata = { title: "Detail produk — Admin RigelStore" };
 export const dynamic = "force-dynamic";
@@ -70,6 +72,23 @@ export default async function ProductDetailPage({
             </form>
           ))}
         </div>
+      </section>
+
+      {/* Cover publik */}
+      <section style={box}>
+        <strong>Cover produk (gambar publik)</strong>
+        <p style={{ color: "var(--muted)", marginTop: 4 }}>
+          Gambar ini tampil di katalog & halaman produk. Bukan file rahasia.
+        </p>
+        {coverUrl(product.cover_path) && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={coverUrl(product.cover_path)!}
+            alt="Cover"
+            style={{ width: 220, borderRadius: 12, marginBottom: 12, display: "block" }}
+          />
+        )}
+        <CoverForm productId={product.id} />
       </section>
 
       {/* File produk */}
