@@ -5,6 +5,36 @@ Format tanggal: YYYY-MM-DD.
 
 ---
 
+## Fase 6 — Telegram storefront — 2026-08-31
+
+Toko versi Telegram yang memakai **backend & database yang sama** dengan
+website. Order dari Telegram muncul juga di admin web.
+
+### Ditambahkan
+- **Tabel** `telegram_users` (pemetaan `telegram_id`; tautan akun opsional).
+- **Modul bot** (`src/modules/bot`): klien Telegram API, identitas guest
+  sintetik deterministik dari `telegram_id`, dan handler update.
+- **Alur bot**: `/start` → katalog (tombol inline) → produk → **Beli (QRIS)**
+  (membuat order lewat `place_order` yang sama) → link/QR pembayaran →
+  **Cek status** → **Ambil barang** (kredensial/link/PDF+password dikirim di
+  chat setelah lunas & verifikasi).
+- **Rute**: `/api/telegram/webhook` (verifikasi `X-Telegram-Bot-Api-Secret-Token`)
+  dan `/api/telegram/setup` (daftarkan webhook, dilindungi CRON_SECRET).
+
+### Prinsip yang dijaga
+- Memakai core commerce yang sama — bukan sistem terpisah.
+- Tidak pernah meminta pembeli menempel kredensial di chat; kredensial hanya
+  DIKIRIM setelah lunas & verifikasi identitas (email sintetik dari telegram_id
+  yang diverifikasi server, jadi hanya bisa akses ordernya sendiri).
+
+### Catatan
+- Untuk live: buat bot di **@BotFather**, isi `TELEGRAM_BOT_TOKEN` &
+  `TELEGRAM_WEBHOOK_SECRET` di env, lalu buka
+  `/api/telegram/setup?key=<CRON_SECRET>` sekali untuk mendaftarkan webhook.
+- Automated test naik jadi **44** (identitas Telegram). Build bersih.
+
+---
+
 ## Fase 5 — Tampilan (mobile-first) + SEO + polish — 2026-08-30
 
 Toko kini terlihat seperti toko normal yang terpercaya (bukan dashboard AI):

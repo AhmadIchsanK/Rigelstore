@@ -27,3 +27,4 @@ menerapkan ke database baru, jalankan berurutan (mis. lewat Supabase CLI
 | 15 | `20260830131019_phase3_rls_policies.sql` | RLS order/pembayaran (baca milik sendiri) |
 | 16 | `20260830131937_phase3_schedule_expiry_sweep.sql` | pg_cron pelepasan stok kadaluwarsa /menit |
 | 17 | `20260830133855_phase4_delivery.sql` | download_events + kolom pengiriman entitlement |
+| 18 | `20260831004115_phase6_telegram_users.sql` | telegram_users (pemetaan identitas Telegram) |

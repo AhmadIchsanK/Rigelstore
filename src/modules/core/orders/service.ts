@@ -105,6 +105,18 @@ export async function getCheckoutView(orderNumber: string) {
   return { order, payment };
 }
 
+/** Daftar order milik satu email guest (mis. pembeli Telegram). */
+export async function listOrdersByGuestEmail(email: string, limit = 10) {
+  const supabase = createSupabaseAdminClient();
+  const { data } = await supabase
+    .from("orders")
+    .select("order_number, status, total_idr, created_at")
+    .eq("guest_email", email)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  return data ?? [];
+}
+
 /** Status ringkas untuk polling (tidak pernah mengubah apa pun). */
 export async function getOrderStatus(orderNumber: string): Promise<string | null> {
   const supabase = createSupabaseAdminClient();

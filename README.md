@@ -5,9 +5,10 @@ dengan lapisan **AI** di tahap akhir. Dibangun sebagai **modular monolith**
 (Next.js + TypeScript) — satu core commerce yang dipakai bersama oleh website
 dan Telegram.
 
-> **Status saat ini: Fase 5 — Tampilan (mobile-first) + SEO + polish.**
-> Toko lengkap: jelajah → beli → bayar QRIS → terima barang aman → ambil ulang,
-> dengan tampilan rapi + SEO. Telegram storefront menyusul di Fase 6.
+> **Status saat ini: Fase 6 — Telegram storefront.**
+> Toko kini punya dua muka (website + bot Telegram) di atas **satu core**:
+> jelajah → beli → bayar QRIS → terima barang aman. Analitik/promo/support
+> menyusul di Fase 7.
 
 ---
 
@@ -70,6 +71,16 @@ Tanpa Midtrans pun bisa dites lokal (env dev memakai `PAYMENT_PROVIDER=mock`):
    `MIDTRANS_CLIENT_KEY`, set `PAYMENT_PROVIDER=midtrans`, dan daftarkan URL
    webhook `<domain>/api/webhooks/midtrans` di dashboard Midtrans.
 
+### Mengaktifkan bot Telegram (Fase 6)
+
+1. Chat **@BotFather** → `/newbot` → dapat **token**.
+2. Isi env `TELEGRAM_BOT_TOKEN` & `TELEGRAM_WEBHOOK_SECRET` (rahasia bebas);
+   pastikan `NEXT_PUBLIC_APP_URL` benar. Redeploy bila di Vercel.
+3. Daftarkan webhook sekali: buka
+   `https://<domain>/api/telegram/setup?key=<CRON_SECRET>`.
+4. Buka bot → `/start` → katalog → beli → bayar → **Ambil barang**. Order-nya
+   juga muncul di admin website (satu database).
+
 ---
 
 ## Aturan kerja proyek (dipegang di SELURUH proyek)
@@ -102,8 +113,8 @@ Tanpa Midtrans pun bisa dites lokal (env dev memakai `PAYMENT_PROVIDER=mock`):
 | 2 | Produk + file + inventory unik. ✅ |
 | 3 | Cart + order + QRIS + webhook ⚠️ (zona bahaya). ✅ |
 | 4 | Delivery aman + akun + pemulihan order guest. ✅ |
-| **5** | **UI mobile-first + SEO + polish. ← sekarang** |
-| 6 | Telegram storefront. |
+| 5 | UI mobile-first + SEO + polish. ✅ |
+| **6** | **Telegram storefront. ← sekarang** |
 | 7 | Analitik + promo + support. |
 | 8 | Security + tes + backup + hardening ⚠️. |
 | 9 | AI product draft + approval. |
