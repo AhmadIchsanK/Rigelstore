@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { loadPrincipal } from "@modules/core/auth/session";
 import { createSupabaseServerClient } from "@modules/database/supabase/server";
 import { placeOrder } from "@modules/core/orders/service";
+import { clientKey, rateLimit } from "@modules/core/security/rateLimit";
 
 export type BuyState = { error: string | null };
 
@@ -17,6 +18,11 @@ export async function buyNowAction(_prev: BuyState, formData: FormData): Promise
   const emailInput = String(formData.get("email") ?? "").trim();
   const couponCode = String(formData.get("coupon") ?? "").trim() || null;
   if (!productId) return { error: "Produk tidak dikenal." };
+
+  // Rate limit: maksimal 10 percobaan beli per menit per IP.
+  if (!(await rateLimit(await clientKey("buy"), 10, 60))) {
+    return { error: "Terlalu banyak percobaan. Coba lagi sebentar." };
+  }
 
   const principal = await loadPrincipal();
   const userId = principal.kind === "guest" ? null : principal.userId;

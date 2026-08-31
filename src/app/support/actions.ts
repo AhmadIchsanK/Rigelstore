@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { loadPrincipal } from "@modules/core/auth/session";
 import { addMessage, createTicket, getTicketWithMessages } from "@modules/core/support/service";
+import { rateLimit } from "@modules/core/security/rateLimit";
 
 export type TicketFormState = { error: string | null };
 
@@ -18,6 +19,11 @@ export async function createTicketAction(
   const body = String(formData.get("body") ?? "").trim();
   const orderNumber = String(formData.get("order_number") ?? "").trim() || null;
   if (!subject || !body) return { error: "Subjek dan pesan wajib diisi." };
+
+  // Rate limit: 5 tiket per 10 menit per pengguna.
+  if (!(await rateLimit(`ticket:${principal.userId}`, 5, 600))) {
+    return { error: "Terlalu banyak tiket dalam waktu singkat. Coba lagi nanti." };
+  }
 
   const id = await createTicket({ userId: principal.userId, subject, body, orderNumber });
   redirect(`/support/${id}`);

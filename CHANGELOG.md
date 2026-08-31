@@ -5,6 +5,31 @@ Format tanggal: YYYY-MM-DD.
 
 ---
 
+## Fase 8 — Security + tes + backup + production hardening — 2026-08-31
+
+Pengerasan menjelang go-live (zona hati-hati).
+
+### Ditambahkan
+- **Rate limiting** berbasis DB (`rate_limits` + `rate_limit_hit`, tahan di
+  serverless multi-instance): beli 10/menit/IP, login 8/5menit/IP, tiket
+  5/10menit/user. Purge otomatis via pg_cron.
+- **Audit login admin** (`admin.login`) pada login sukses.
+- **Session revoke**: "Keluar dari semua perangkat" (global sign-out) di
+  `/account/security`.
+- **2FA (TOTP)** via Supabase MFA di `/account/security` — enroll (QR) + verify
+  + nonaktifkan; peringatan wajib untuk Super Admin.
+- **RUNBOOK.md**: prosedur backup, **tes restore**, rotasi rahasia, dan
+  checklist go-live.
+- **Automated test integrasi** (opt-in `npm run test:db`) untuk aturan uang
+  terhadap DB nyata: anti double-sell, idempotency webhook, diskon kupon.
+  Di `npm test` biasa di-skip (aman). Total 44 test unit + 3 test integrasi.
+
+### Catatan
+- Aktifkan di dashboard Supabase Auth: **Leaked password protection** &
+  minimum password length. Ganti password admin default yang lemah.
+
+---
+
 ## Fase 7 — Analitik + Promo (kupon) + Support + cover produk — 2026-08-31
 
 ### Ditambahkan
