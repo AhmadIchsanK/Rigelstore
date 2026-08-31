@@ -67,6 +67,30 @@ export async function listProducts() {
   return data ?? [];
 }
 
+/** Produk 'published' untuk katalog publik (mis. bot Telegram). */
+export async function listPublishedProducts(limit = 30) {
+  const supabase = createSupabaseAdminClient();
+  const { data } = await supabase
+    .from("products")
+    .select("id, slug, title, type, price_idr")
+    .eq("status", "published")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  return data ?? [];
+}
+
+/** Satu produk 'published' berdasarkan id. */
+export async function getPublishedProduct(id: string) {
+  const supabase = createSupabaseAdminClient();
+  const { data } = await supabase
+    .from("products")
+    .select("id, slug, title, description, type, price_idr, status")
+    .eq("id", id)
+    .eq("status", "published")
+    .maybeSingle();
+  return data;
+}
+
 export async function getProduct(id: string) {
   const supabase = createSupabaseAdminClient();
   const [{ data: product }, { data: files }, { data: items }] = await Promise.all([

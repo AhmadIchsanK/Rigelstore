@@ -3,7 +3,17 @@
 Storefront versi Telegram. **WAJIB memakai `core/` yang sama** dengan website —
 dilarang membuat sistem commerce terpisah.
 
-**Status Fase 0:** kerangka kosong.
+**Status:** Fase 6 aktif. Storefront Telegram memakai **core yang sama** dengan
+website (produk, order, delivery) — bukan sistem terpisah.
+
+- `api.ts` — klien Telegram Bot API (sendMessage/sendPhoto/callback/setWebhook).
+- `identity.ts` — email guest sintetik deterministik dari `telegram_id`
+  (pembeli Telegram = guest; tak bisa dipalsukan dari klien).
+- `handler.ts` — /start, katalog, produk, beli (QRIS), cek status, ambil barang.
+- Rute: `src/app/api/telegram/webhook` (verifikasi secret) & `.../setup`
+  (daftarkan webhook).
+
+Order dari Telegram muncul juga di admin website (satu database).
 
 ## Isi yang direncanakan (dibangun Fase 6)
 

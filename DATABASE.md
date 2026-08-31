@@ -35,6 +35,10 @@ Database: **PostgreSQL** (Supabase). Semua akses lewat modul `database`.
 > `download_count`). Pengiriman aman: signed URL berumur pendek + reveal
 > kredensial setelah verifikasi kepemilikan.
 >
+> **Fase 6:** ditambahkan `telegram_users` (pemetaan `telegram_id` ↔ pembeli;
+> tautan akun opsional). Pembeli Telegram diperlakukan sebagai guest dengan
+> email sintetik deterministik, memakai order/entitlement/delivery yang sama.
+>
 > Tabel AI/social menyusul di fasenya.
 
 ---
