@@ -28,3 +28,9 @@ menerapkan ke database baru, jalankan berurutan (mis. lewat Supabase CLI
 | 16 | `20260830131937_phase3_schedule_expiry_sweep.sql` | pg_cron pelepasan stok kadaluwarsa /menit |
 | 17 | `20260830133855_phase4_delivery.sql` | download_events + kolom pengiriman entitlement |
 | 18 | `20260831004115_phase6_telegram_users.sql` | telegram_users (pemetaan identitas Telegram) |
+| 19 | `20260831010243_phase7_public_covers_bucket.sql` | bucket publik `product-covers` |
+| 20 | `20260831011212_phase7_coupons.sql` | coupons + compute_coupon_discount + kolom orders |
+| 21 | `20260831011254_phase7_place_order_coupon.sql` | place_order+confirm_order_paid dgn kupon |
+| 22 | `20260831011318_phase7_support_tickets.sql` | support_tickets + support_messages |
+| 23 | `20260831011350_phase7_sales_overview.sql` | fungsi analitik sales_overview() |
+| 24 | `20260831093839_phase7_harden_coupon_fn.sql` | pengerasan grant compute_coupon_discount |

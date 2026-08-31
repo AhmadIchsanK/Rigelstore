@@ -18,13 +18,28 @@ export default async function CheckoutPage({
   const { order, payment } = view;
   const isMock = payment?.provider === "mock";
 
+  const discount = Number(order.discount_idr ?? 0);
+
   return (
-    <main style={{ maxWidth: 560, margin: "0 auto", padding: "40px 24px" }}>
-      <Link href="/catalog" style={{ color: "var(--muted)", textDecoration: "none" }}>
+    <main className="container page" style={{ maxWidth: 600 }}>
+      <Link href="/catalog" className="muted">
         ← Katalog
       </Link>
-      <h1 style={{ color: "var(--brand)" }}>Pembayaran</h1>
-      <p style={{ color: "var(--muted)", marginTop: 0 }}>Order {order.order_number}</p>
+      <h1>Pembayaran</h1>
+      <p className="muted" style={{ marginTop: 0 }}>Order {order.order_number}</p>
+
+      {discount > 0 && (
+        <div className="card card-pad" style={{ marginBottom: 16 }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span className="muted">Subtotal</span>
+            <span>Rp{Number(order.subtotal_idr).toLocaleString("id-ID")}</span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", color: "var(--success)" }}>
+            <span>Diskon ({order.coupon_code})</span>
+            <span>−Rp{discount.toLocaleString("id-ID")}</span>
+          </div>
+        </div>
+      )}
 
       <CheckoutClient
         orderNumber={order.order_number}

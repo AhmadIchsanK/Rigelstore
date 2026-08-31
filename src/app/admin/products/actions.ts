@@ -14,11 +14,14 @@ import {
   addProductFileRecord,
   createProduct,
   revokeInventoryItem,
+  setProductCover,
   setProductStatus,
 } from "@modules/core/products/service";
 import { isProductStatus, isProductType } from "@modules/core/products/types";
 import {
+  buildCoverPath,
   buildProductFilePath,
+  uploadCover,
   uploadProductFile,
 } from "@modules/storage/supabaseStorage";
 
@@ -139,6 +142,43 @@ export async function uploadFileAction(
     targetType: "product",
     targetId: productId,
     metadata: { kind, filename: file.name, size: file.size },
+  });
+
+  revalidatePath(`/admin/products/${productId}`);
+  return { error: null };
+}
+
+/** Unggah gambar cover PUBLIK produk (butuh products.manage). */
+export async function uploadCoverAction(
+  _prev: ProductFormState,
+  formData: FormData,
+): Promise<ProductFormState> {
+  let principal;
+  try {
+    principal = await requirePerm("products.manage");
+  } catch (e) {
+    if (e instanceof AuthorizationError) return { error: "Tidak berwenang." };
+    throw e;
+  }
+
+  const productId = String(formData.get("product_id") ?? "");
+  const file = formData.get("cover");
+  if (!productId) return { error: "Produk tidak dikenal." };
+  if (!(file instanceof File) || file.size === 0) return { error: "Pilih gambar dulu." };
+  if (!file.type.startsWith("image/")) return { error: "File harus berupa gambar." };
+  if (file.size > 5 * 1024 * 1024) return { error: "Ukuran gambar maksimal 5 MB." };
+
+  const path = buildCoverPath(productId, file.name);
+  await uploadCover(path, await file.arrayBuffer(), file.type);
+  await setProductCover(productId, path);
+
+  await logAudit({
+    actorId: principal.userId,
+    actorRole: principal.role,
+    action: "product.cover.upload",
+    targetType: "product",
+    targetId: productId,
+    metadata: { filename: file.name },
   });
 
   revalidatePath(`/admin/products/${productId}`);

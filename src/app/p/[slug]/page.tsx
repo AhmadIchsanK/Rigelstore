@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createSupabaseServerClient } from "@modules/database/supabase/server";
 import { loadPrincipal } from "@modules/core/auth/session";
-import { PRODUCT_TYPE_LABEL, coverColor, rupiah, typeChipClass } from "../../_components/format";
+import { PRODUCT_TYPE_LABEL, coverColor, coverUrl, rupiah, typeChipClass } from "../../_components/format";
 import { BuyBox } from "./BuyBox";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +11,7 @@ async function fetchProduct(slug: string) {
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
     .from("products")
-    .select("id, title, description, type, price_idr, status")
+    .select("id, title, description, type, price_idr, status, cover_path")
     .eq("slug", slug)
     .eq("status", "published")
     .maybeSingle();
@@ -53,12 +53,21 @@ export default async function ProductPage({
           className="card"
           style={{ overflow: "hidden", display: "grid", gridTemplateColumns: "1fr", gap: 0 }}
         >
-          <div
-            className="cover"
-            style={{ background: coverColor(product.title), aspectRatio: "16 / 6", fontSize: 56, margin: 0, borderRadius: 0 }}
-          >
-            {initial}
-          </div>
+          {coverUrl(product.cover_path) ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={coverUrl(product.cover_path)!}
+              alt={product.title}
+              style={{ width: "100%", aspectRatio: "16 / 7", objectFit: "cover", display: "block" }}
+            />
+          ) : (
+            <div
+              className="cover"
+              style={{ background: coverColor(product.title), aspectRatio: "16 / 6", fontSize: 56, margin: 0, borderRadius: 0 }}
+            >
+              {initial}
+            </div>
+          )}
           <div className="card-pad">
             <span className={typeChipClass(product.type)}>
               {PRODUCT_TYPE_LABEL[product.type] ?? product.type}

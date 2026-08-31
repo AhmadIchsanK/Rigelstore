@@ -32,6 +32,7 @@ export async function placeOrder(input: {
   userId: string | null;
   guestEmail: string | null;
   items: CartItem[];
+  couponCode?: string | null;
 }): Promise<PlacedOrder> {
   const supabase = createSupabaseAdminClient();
   const minutes = reservationMinutes();
@@ -42,6 +43,7 @@ export async function placeOrder(input: {
     p_guest_email: input.guestEmail,
     p_items: input.items.map((i) => ({ product_id: i.productId, quantity: i.quantity })),
     p_minutes: minutes,
+    p_coupon: input.couponCode ?? null,
   });
   if (error) {
     if (error.message.includes("OUT_OF_STOCK")) throw new Error("OUT_OF_STOCK");
@@ -89,7 +91,7 @@ export async function getCheckoutView(orderNumber: string) {
   const supabase = createSupabaseAdminClient();
   const { data: order } = await supabase
     .from("orders")
-    .select("id, order_number, status, total_idr, expires_at")
+    .select("id, order_number, status, subtotal_idr, discount_idr, total_idr, coupon_code, expires_at")
     .eq("order_number", orderNumber)
     .maybeSingle();
   if (!order) return null;

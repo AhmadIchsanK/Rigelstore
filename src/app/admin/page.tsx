@@ -113,6 +113,21 @@ export default async function AdminPage() {
         </section>
       )}
 
+      <section style={{ marginTop: 24, padding: 20, border: "1px solid #e5e7eb", borderRadius: 12 }}>
+        <strong>Operasional</strong>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 10 }}>
+          {can(principal, "analytics.read") && (
+            <Link href="/admin/analytics" className="btn">📊 Analitik</Link>
+          )}
+          {can(principal, "coupons.manage") && (
+            <Link href="/admin/coupons" className="btn">🎟️ Kupon</Link>
+          )}
+          {can(principal, "support.manage") && (
+            <Link href="/admin/support" className="btn">💬 Support</Link>
+          )}
+        </div>
+      </section>
+
       {can(principal, "admins.manage") && (
         <section
           style={{ marginTop: 24, padding: 20, border: "1px solid #e5e7eb", borderRadius: 12 }}

@@ -72,7 +72,7 @@ export async function listPublishedProducts(limit = 30) {
   const supabase = createSupabaseAdminClient();
   const { data } = await supabase
     .from("products")
-    .select("id, slug, title, type, price_idr")
+    .select("id, slug, title, type, price_idr, cover_path")
     .eq("status", "published")
     .order("created_at", { ascending: false })
     .limit(limit);
@@ -114,6 +114,13 @@ export async function setProductStatus(id: string, status: ProductStatus): Promi
       published_at: status === "published" ? new Date().toISOString() : null,
     })
     .eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+/** Set path cover produk (di bucket publik). */
+export async function setProductCover(id: string, coverPath: string): Promise<void> {
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase.from("products").update({ cover_path: coverPath }).eq("id", id);
   if (error) throw new Error(error.message);
 }
 

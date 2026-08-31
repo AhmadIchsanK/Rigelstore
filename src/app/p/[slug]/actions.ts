@@ -15,6 +15,7 @@ export type BuyState = { error: string | null };
 export async function buyNowAction(_prev: BuyState, formData: FormData): Promise<BuyState> {
   const productId = String(formData.get("product_id") ?? "");
   const emailInput = String(formData.get("email") ?? "").trim();
+  const couponCode = String(formData.get("coupon") ?? "").trim() || null;
   if (!productId) return { error: "Produk tidak dikenal." };
 
   const principal = await loadPrincipal();
@@ -50,6 +51,7 @@ export async function buyNowAction(_prev: BuyState, formData: FormData): Promise
       userId,
       guestEmail: userId ? null : guestEmail,
       items: [{ productId, quantity: 1 }],
+      couponCode,
     });
     orderNumber = placed.orderNumber;
   } catch (e) {

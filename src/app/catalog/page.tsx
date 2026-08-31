@@ -11,7 +11,7 @@ export default async function CatalogPage() {
   const supabase = await createSupabaseServerClient();
   const { data: products } = await supabase
     .from("products")
-    .select("id, slug, title, type, price_idr")
+    .select("id, slug, title, type, price_idr, cover_path")
     .eq("status", "published")
     .order("created_at", { ascending: false });
 

@@ -12,6 +12,7 @@ import "server-only";
 import { createSupabaseAdminClient } from "@modules/database/supabase/admin";
 
 export const PRODUCT_FILES_BUCKET = "product-files";
+export const PRODUCT_COVERS_BUCKET = "product-covers";
 
 /** Default masa berlaku signed URL: 5 menit. */
 export const DEFAULT_SIGNED_URL_TTL_SECONDS = 300;
@@ -55,6 +56,28 @@ export async function createSignedUrl(
     .createSignedUrl(path, expiresIn);
   if (error || !data) throw new Error(`Gagal membuat signed URL: ${error?.message}`);
   return data.signedUrl;
+}
+
+/** Path cover unik untuk sebuah produk (di bucket publik). */
+export function buildCoverPath(productId: string, filename: string): string {
+  const safe = filename.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 80);
+  return `${productId}/${crypto.randomUUID()}-${safe}`;
+}
+
+/** Unggah cover ke bucket PUBLIK. Mengembalikan path tersimpan. */
+export async function uploadCover(
+  path: string,
+  data: ArrayBuffer | Uint8Array,
+  contentType: string,
+): Promise<UploadResult> {
+  const supabase = createSupabaseAdminClient();
+  const body = data instanceof Uint8Array ? data : new Uint8Array(data);
+  const { error } = await supabase.storage.from(PRODUCT_COVERS_BUCKET).upload(path, body, {
+    contentType,
+    upsert: true,
+  });
+  if (error) throw new Error(`Gagal upload cover: ${error.message}`);
+  return { path, size: body.byteLength, contentType };
 }
 
 /** Hapus file (mis. saat mengganti aset). */
