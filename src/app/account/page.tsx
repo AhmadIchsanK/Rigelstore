@@ -20,6 +20,7 @@ export default async function AccountPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1 style={{ margin: 0 }}>Akun saya</h1>
         <div style={{ display: "flex", gap: 10 }}>
+          <Link href="/account/security" className="btn">Keamanan</Link>
           <Link href="/support" className="btn">Bantuan</Link>
           <form action={signOut}>
             <button className="btn">Keluar</button>

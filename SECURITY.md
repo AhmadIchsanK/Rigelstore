@@ -38,6 +38,8 @@ sini yang menyangkut aturan bisnis penting **wajib punya automated test**.
 ## 6. Rate limiting
 
 - Terapkan rate limiting (login, endpoint sensitif, webhook, API).
+- **Status (Fase 8): AKTIF** — berbasis DB (`rate_limit_hit`), diterapkan pada
+  beli (10/menit/IP), login (8/5 menit/IP), buat tiket (5/10 menit/user).
 
 ## 7. Secret hanya di environment
 

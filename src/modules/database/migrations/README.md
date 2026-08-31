@@ -34,3 +34,4 @@ menerapkan ke database baru, jalankan berurutan (mis. lewat Supabase CLI
 | 22 | `20260831011318_phase7_support_tickets.sql` | support_tickets + support_messages |
 | 23 | `20260831011350_phase7_sales_overview.sql` | fungsi analitik sales_overview() |
 | 24 | `20260831093839_phase7_harden_coupon_fn.sql` | pengerasan grant compute_coupon_discount |
+| 25 | `20260831094500_phase8_rate_limit.sql` | rate_limits + rate_limit_hit + purge cron |
